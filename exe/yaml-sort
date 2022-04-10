@@ -2,3 +2,5 @@
 # frozen_string_literal: true
 
 require "yaml/sort"
+
+Yaml::Sort::Parser.new.parse(ARGF.read)

@@ -3,6 +3,7 @@
 /_yardoc/
 /coverage/
 /doc/
+/lib/yaml/sort/parser.rb
 /pkg/
 /spec/reports/
 /tmp/

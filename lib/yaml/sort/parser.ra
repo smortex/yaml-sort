@@ -1,0 +1,180 @@
+# frozen_string_literal: true
+
+# vim:set syntax=racc:
+
+class Yaml::Sort::Parser
+token
+  START_OF_DOCUMENT END_OF_DOCUMENT
+  VALUE KEY
+rule
+  document: START_OF_DOCUMENT value END_OF_DOCUMENT
+          | START_OF_DOCUMENT value
+          | value
+
+  value: VALUE
+       | dictionary
+       | list
+
+  dictionary: dictionary dictionary_item
+            | dictionary_item
+
+  dictionary_item: key_value
+
+  key_value: KEY value
+
+  list: list list_item
+      | list_item
+
+  list_item: item
+
+  item: '-' value
+end
+
+---- header
+
+require 'strscan'
+
+---- inner
+
+def scan(text)
+  scan_value = false
+
+  @lines = text.lines
+  s = StringScanner.new(text)
+  @tokens = []
+  @lineno = 1
+  @fakelineno = 0
+  @position = 0
+
+  # emit(:INDENT, "") unless s.match?(/---/)
+
+  until s.eos?
+    if scan_value
+      unless s.match?(/[[:space:]]*\n/)
+        @position += s.matched_size if s.scan(/\s*/)
+        case
+        when s.scan(/[|>][-+]?(?=\n)/)
+          match = s.matched
+          
+          while s.match?("\n" + last_indent_value + " ")
+            match += s.scan(/\n[^\n]+(?=\n)/)
+          end
+          emit(:VALUE, match)
+        when s.scan(/"/)
+          match = s.matched
+          loop do
+            match += s.scan_until(/"|\\/)
+            if match[-1] == "\\"
+              match += s.scan(/.|\n/)
+            else
+              break
+            end
+          end
+          emit(:VALUE, match)
+        when s.scan(/'/)
+          match = s.matched
+          loop do
+            match += s.scan_until(/'/)
+            break unless s.match?(/'/)
+            match += s.scan(/'/)
+          end
+          emit(:VALUE, match)
+        when s.scan(/\S+/)
+          match = s.matched
+          until s.match?(/\n/)
+            match += s.scan(/[^\n]+/)
+          end
+          emit(:VALUE, match)
+        end
+      end
+      scan_value = false
+    else
+      case
+      when s.scan(/\n?\s*#.*/)        then emit(:COMMENT, s.matched)
+      #when s.scan(/\s+/)        then @position += s.matched_size # noop
+      when s.scan(/---/)        then emit(:START_OF_DOCUMENT, s.matched)
+      when s.scan(/\n?(\s*)-/)
+        emit("-", s.matched, indent: s.captures[0])
+        #scan_value = true
+      when s.scan(/\n?\s*\.\.\./)     then emit(:END_OF_DOCUMENT, s.matched)
+      when s.scan(/\n?(\s*)([^[[:space:]]\n]+):(?=[ \n])/)
+        emit(:KEY, s.matched, indent: s.captures[0])
+        #scan_value = true
+
+      when s.scan(/\n\z/)
+        # Done
+     when s.match?(/./)
+       scan_value = true
+  #      raise SyntaxError.new("Syntax error: #{@line}")
+  #      raise SyntaxError.new('Syntax error', { filename: @filename, lineno: @lineno, position: @position, line: @line })
+      else
+        raise "LoST: #{s.rest.inspect} #{s.eos?}"
+      end
+    end
+  end
+
+  # TODO Keep comments
+  @tokens = @tokens.delete_if { |itm| itm[0] == :COMMENT }
+
+  @tokens
+end
+
+def emit(token, value, length: nil, indent: nil)
+  if token && length.nil?
+    raise "length must be explicitly passed when value is not a String (#{value.class.name})" unless value.is_a?(String)
+    length = value.length
+  end
+
+  if value.start_with?("\n")
+    @lineno += 1
+    value = value[1..-1]
+    length -= 1
+    @position = 0
+  end
+
+  exvalue = {
+    value: value,
+    lineno: @lineno,
+    position: @position,
+    filename: @filename,
+    length: length,
+    indent: indent,
+  }
+  @tokens << [token, exvalue]
+
+  @lineno += value.count("\n")
+
+  @position += length
+end
+
+def last_indent_value
+  idx = -1
+  loop do
+    return @tokens[idx][1][:indent] if [:KEY, "-"].include?(@tokens[idx][0])
+    idx -= 1
+  end
+end
+
+def next_token
+  @current_token = @tokens.shift
+end
+
+def parse(text)
+  scan(text)
+  do_parse
+end
+
+def on_error(error_token_id, error_value, value_stack)
+  puts error_value.inspect
+  puts value_stack.inspect
+  #puts "Current token:"
+  #puts @current_token.inspect
+  #puts "Next tokens:"
+  #puts @tokens[0..5].inspect
+
+  puts "unexpected #{@current_token[0]} on #{@current_token[1][:filename] || "<stdin>"}:#{@current_token[1][:lineno]}"
+  puts @lines[@current_token[1][:lineno]]
+  puts " " * @current_token[1][:position] + "^" + "~" * (@current_token[1][:length] - 1)
+
+  raise "Error"
+end
