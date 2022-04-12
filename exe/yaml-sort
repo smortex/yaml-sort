@@ -2,5 +2,6 @@
 # frozen_string_literal: true
 
 require "yaml/sort"
+require "yaml/sort/cli"
 
-Yaml::Sort::Parser.new.parse(ARGF.read)
+Yaml::Sort::Cli.new.execute(ARGV)

@@ -5,6 +5,9 @@ AllCops:
     - lib/yaml/sort/parser.rb
     - vendor/**/*
 
+Style/Documentation:
+  Enabled: false
+
 Style/StringLiterals:
   Enabled: true
   EnforcedStyle: double_quotes
