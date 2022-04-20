@@ -181,6 +181,7 @@ def scan(text)
     else
       case
       when s.scan(/---/)              then emit(:START_OF_DOCUMENT, s.matched)
+      when s.scan(/(\n\s*)+(?=\n)/)   then # Ignore empty lines
       when s.scan(/\n?\s*#.*/)        then emit(:COMMENT, s.matched)
       when s.scan(/\n?(\s*-) */)      then emit("-", s.matched, indent: s.captures[0])
       when s.scan(/\n?\s*\.\.\./)     then emit(:END_OF_DOCUMENT, s.matched)
