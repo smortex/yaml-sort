@@ -22,20 +22,38 @@ Usage: yaml-sort [options] [filename]
     -l, --lint                       Ensure files content is sorted as expected
 ```
 
-## Puppet Integration
+## Hiera Integration for Puppet
 
 Add this to your Rakefile:
 
-```
+```ruby
 require "yaml/sort/tasks/puppet"
+
+Rake::Task[:lint].enhance ["lint:hiera_data_ordering"]
+```
+
+This provide two new targets:
+
+```
+rake lint:hiera_data_ordering  # Check Hiera data content ordering
+rake reorder_hiera_data        # Reorder Hiera data in-place
 ```
 
 ## Ruby on Rails Integration
 
 Add this to your Rakefile:
 
-```
+```ruby
 require "yaml/sort/tasks/rails"
+
+Rake::Task[:test].enhance ["test:translations_ordering"]
+```
+
+This provide two new targets:
+
+```
+rake reorder_translations        # Reorder translations in-place
+rake test:translations_ordering  # Check translations content ordering
 ```
 
 ## Development

@@ -11,5 +11,3 @@ desc "Reorder translations in-place"
 task :reorder_translations do
   sh "yaml-sort", "--in-place", *Dir.glob("config/locales/**/*.yml")
 end
-
-Rake::Task[:test].enhance ["test:translations_ordering"]
