@@ -19,9 +19,6 @@ module Yaml
         OptionParser.new do |opts|
           opts.banner = "Usage: yaml-sort [options] [filename]"
 
-          opts.on("-d", "--[no-]debug", "Run verbosely") do |d|
-            options[:debug] = d
-          end
           opts.on("-i", "--in-place", "Update files in-place") do
             options[:in_place] = true
           end
