@@ -4,4 +4,4 @@
 require "yaml/sort"
 require "yaml/sort/cli"
 
-Yaml::Sort::Cli.new.execute(ARGV)
+exit Yaml::Sort::Cli.new.execute(ARGV)
