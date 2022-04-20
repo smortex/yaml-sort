@@ -21,7 +21,7 @@ module Yaml
       end
 
       def to_s
-        items.map do |item|
+        super + items.map do |item|
           "#{item[0]}#{item[1]}"
         end.join("\n")
       end

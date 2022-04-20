@@ -107,7 +107,16 @@ def scan(text)
 
   unindent
 
-  # TODO Keep comments
+  comment = []
+  @tokens.each do |token|
+    if token[0] == :COMMENT
+      comment << token[1][:value] + "\n"
+    elsif comment.any?
+      token[1][:comment] = comment
+      comment = []
+    end
+  end
+
   @tokens = @tokens.delete_if { |itm| itm[0] == :COMMENT }
 
   @tokens

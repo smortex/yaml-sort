@@ -7,6 +7,7 @@ module Yaml
 
       def initialize(value)
         super()
+        @comment = value[:comment] || []
         @value = value[:value]
       end
 
@@ -19,7 +20,7 @@ module Yaml
       end
 
       def to_s
-        value
+        super + value
       end
     end
   end

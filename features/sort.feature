@@ -63,3 +63,35 @@ Feature: Sorting YAML files
       - foo
       profile::acme::secret: password
       """
+  Scenario: Preserving comments
+    Given a file named "common.yaml" with:
+      """
+      ---
+      # A single-line comment is attached to the following item
+      foo: foo
+      # A multi-line comment is attached to the following item
+      # (Just like a single-line comment)
+      bar: bar
+      baz:
+        # Single line
+        - foo
+        # Multi
+        # line
+        - bar
+      """
+    When I successfully run `exe/yaml-sort common.yaml`
+    Then the stdout should contain:
+      """
+      ---
+      # A multi-line comment is attached to the following item
+      # (Just like a single-line comment)
+      bar: bar
+      baz:
+        # Multi
+        # line
+        - bar
+        # Single line
+        - foo
+      # A single-line comment is attached to the following item
+      foo: foo
+      """

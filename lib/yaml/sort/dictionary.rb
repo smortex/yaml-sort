@@ -21,7 +21,7 @@ module Yaml
       end
 
       def to_s
-        items.map do |k, v|
+        super + items.map do |k, v|
           case v
           when List, Dictionary
             "#{k}\n#{v}"
