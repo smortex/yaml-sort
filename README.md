@@ -6,7 +6,11 @@ This is mainly indended to manage [Hiera files](https://puppet.com/docs/puppet/7
 
 ## Installation
 
-Install the gem by executing:
+Install the gem and add to the application's Gemfile by executing:
+
+    $ bundle add yaml-sort
+
+If bundler is not being used to manage dependencies, install the gem by executing:
 
     $ gem install yaml-sort
 
@@ -16,6 +20,22 @@ Install the gem by executing:
 Usage: yaml-sort [options] [filename]
     -i, --in-place                   Update files in-place
     -l, --lint                       Ensure files content is sorted as expected
+```
+
+## Puppet Integration
+
+Add this to your Rakefile:
+
+```
+require "yaml/sort/tasks/puppet"
+```
+
+## Ruby on Rails Integration
+
+Add this to your Rakefile:
+
+```
+require "yaml/sort/tasks/rails"
 ```
 
 ## Development
