@@ -21,3 +21,6 @@ Layout/LineLength:
 
 Metrics/BlockLength:
   Enabled: false
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: consistent_comma
