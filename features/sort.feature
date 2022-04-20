@@ -31,3 +31,35 @@ Feature: Sorting YAML files
       - baz
       - foo
       """
+  Scenario: Sorting Puppet hiera data
+    The `lookup_options` key is special, we want it to always be at the
+    beginning of the file.
+    Given a file named "common.yaml" with:
+      """
+      ---
+      profile::acme::secret: password
+      lookup_options:
+        "profile::acme::secret":
+          convert_to: "Sensitive"
+        "^secrets::.*":
+          convert_to: "Sensitive"
+      classes:
+      - foo
+      - bar
+      - baz
+      """
+    When I successfully run `exe/yaml-sort common.yaml`
+    Then the stdout should contain:
+      """
+      ---
+      lookup_options:
+        "^secrets::.*":
+          convert_to: "Sensitive"
+        "profile::acme::secret":
+          convert_to: "Sensitive"
+      classes:
+      - bar
+      - baz
+      - foo
+      profile::acme::secret: password
+      """

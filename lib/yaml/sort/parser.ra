@@ -85,7 +85,15 @@ class Dictionary < Value
   end
 
   def sort
-    Dictionary.new(items.map { |a| [a[0], a[1].sort] }.sort { |a, b| a[0] <=> b[0] })
+    Dictionary.new(items.map { |a| [a[0], a[1].sort] }.sort do |a, b|
+      if a[0].value == 'lookup_options:'
+        -1
+      elsif b[0].value == 'lookup_options:'
+        1
+      else
+        a[0] <=> b[0]
+      end
+    end)
   end
 end
 
