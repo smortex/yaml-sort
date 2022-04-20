@@ -5,15 +5,15 @@
 class Yaml::Sort::Parser
 token
   START_OF_DOCUMENT END_OF_DOCUMENT
-  VALUE KEY
+  VALUE KEY UNINDENT
 rule
   document: START_OF_DOCUMENT value END_OF_DOCUMENT { result = val[1] }
           | START_OF_DOCUMENT value                 { result = val[1] }
           | value
 
-  value: VALUE      { result = Scalar.new(val[0]) }
-       | dictionary
-       | list
+  value: VALUE               { result = Scalar.new(val[0]) }
+       | dictionary UNINDENT { result = val[0] }
+       | list UNINDENT       { result = val[0] }
 
   dictionary: dictionary dictionary_item { val[0].add_item(*val[1]); result = val[0] }
             | dictionary_item            { result = Dictionary.create(*val[0]) }
@@ -128,6 +128,7 @@ def scan(text)
   @lineno = 1
   @fakelineno = 0
   @position = 0
+  @indent_stack = []
 
   # emit(:INDENT, "") unless s.match?(/---/)
 
@@ -176,12 +177,14 @@ def scan(text)
       when s.scan(/\n?\s*#.*/)        then emit(:COMMENT, s.matched)
       #when s.scan(/\s+/)        then @position += s.matched_size # noop
       when s.scan(/---/)        then emit(:START_OF_DOCUMENT, s.matched)
-      when s.scan(/\n?(\s*)- */)
+      when s.scan(/\n?(\s*-) */)
         emit("-", s.matched, indent: s.captures[0])
         #scan_value = true
       when s.scan(/\n?\s*\.\.\./)     then emit(:END_OF_DOCUMENT, s.matched)
       when s.scan(/\n?(\s*)([^[[:space:]]\n]+):(?=[ \n])/)
-        emit(:KEY, s.matched, indent: s.captures[0])
+        indent = s.captures[0]
+        indent = last_indent_value + indent + " " unless s.matched.start_with?("\n")
+        emit(:KEY, s.matched, indent: indent)
         #scan_value = true
 
       when s.scan(/\n\z/)
@@ -196,6 +199,8 @@ def scan(text)
     end
   end
 
+  unindent
+
   # TODO Keep comments
   @tokens = @tokens.delete_if { |itm| itm[0] == :COMMENT }
 
@@ -203,6 +208,7 @@ def scan(text)
 end
 
 def emit(token, value, length: nil, indent: nil)
+  indent.gsub!("-", " ") if indent
   if token && length.nil?
     raise "length must be explicitly passed when value is not a String (#{value.class.name})" unless value.is_a?(String)
     length = value.length
@@ -213,6 +219,11 @@ def emit(token, value, length: nil, indent: nil)
     value = value[1..-1]
     length -= 1
     @position = 0
+  end
+
+  if indent
+    unindent(indent)
+    @indent_stack.push(indent) unless @indent_stack.last == indent
   end
 
   exvalue = {
@@ -231,10 +242,13 @@ def emit(token, value, length: nil, indent: nil)
 end
 
 def last_indent_value
-  idx = -1
-  loop do
-    return @tokens[idx][1][:indent] if [:KEY, "-"].include?(@tokens[idx][0])
-    idx -= 1
+  @indent_stack.last || ""
+end
+
+def unindent(new_indent = nil)
+  while @indent_stack.count > 0 && (new_indent.nil? || @indent_stack.last.length > new_indent.length)
+    value = @indent_stack.pop
+    @tokens << [:UNINDENT, { value: value, lineno: @lineno, position: 0, filename: @filename, length: value.length, indent: nil }]
   end
 end
 

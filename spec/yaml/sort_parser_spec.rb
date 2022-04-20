@@ -27,7 +27,8 @@ RSpec.describe Yaml::Sort::Parser do
                          [:KEY, { filename: nil, length: 4, lineno: 3, position: 0, value: "bar:", indent: "" }],
                          [:VALUE, { filename: nil, length: 9, lineno: 3, position: 5, value: "|-\n  Plop", indent: nil }],
                          [:KEY, { filename: nil, length: 4, lineno: 5, position: 0, value: "baz:", indent: "" }],
-                         [:VALUE, { filename: nil, length: 2, lineno: 5, position: 5, value: "42", indent: nil }]])
+                         [:VALUE, { filename: nil, length: 2, lineno: 5, position: 5, value: "42", indent: nil }],
+                         [:UNINDENT, { filename: nil, length: 0, lineno: 5, position: 0, value: "", indent: nil }]])
     end
   end
 
@@ -53,13 +54,14 @@ RSpec.describe Yaml::Sort::Parser do
         # rubocop:disable Layout/TrailingWhitespace
         is_expected.to eq([[:START_OF_DOCUMENT, "---"],
                            [:KEY, "example:"],
-                           [:VALUE, <<~STRING.chomp]])
+                           [:VALUE, <<~STRING.chomp],
                              'Several lines of text,
                                containing ''single quotes''. Escapes (like \\n) don''t do anything.
                                
                                Newlines can be added by leaving a blank line.
                                  Leading whitespace on lines is ignored.'
                            STRING
+                           [:UNINDENT, ""]])
         # rubocop:enable Layout/TrailingWhitespace
       end
     end
@@ -89,7 +91,7 @@ RSpec.describe Yaml::Sort::Parser do
         # rubocop:disable Layout/TrailingWhitespace
         is_expected.to eq([[:START_OF_DOCUMENT, "---"],
                            [:KEY, "example:"],
-                           [:VALUE, <<~STRING.chomp]])
+                           [:VALUE, <<~STRING.chomp],
                              "Several lines of text,
                                containing \\"double quotes\\". Escapes (like \\\\n) work.\\nIn addition,
                                newlines can be esc\\
@@ -98,6 +100,7 @@ RSpec.describe Yaml::Sort::Parser do
                                Newlines can also be added by leaving a blank line.
                                  Leading whitespace on lines is ignored."
                            STRING
+                           [:UNINDENT, ""]])
         # rubocop:enable Layout/TrailingWhitespace
       end
     end
@@ -121,7 +124,8 @@ RSpec.describe Yaml::Sort::Parser do
                              KEY
                              VALUE
                              KEY
-                             VALUE])
+                             VALUE
+                             UNINDENT])
       end
     end
   end
@@ -149,7 +153,9 @@ RSpec.describe Yaml::Sort::Parser do
                              KEY
                              VALUE
                              KEY
-                             VALUE])
+                             VALUE
+                             UNINDENT
+                             UNINDENT])
       end
     end
   end
@@ -175,7 +181,8 @@ RSpec.describe Yaml::Sort::Parser do
                            "-",
                            :VALUE,
                            "-",
-                           :VALUE])
+                           :VALUE,
+                           :UNINDENT])
       end
     end
   end
@@ -201,9 +208,12 @@ RSpec.describe Yaml::Sort::Parser do
                            :VALUE,
                            :KEY,
                            :VALUE,
+                           :UNINDENT,
                            "-",
                            :KEY,
-                           :VALUE])
+                           :VALUE,
+                           :UNINDENT,
+                           :UNINDENT])
       end
     end
   end
@@ -231,7 +241,9 @@ RSpec.describe Yaml::Sort::Parser do
                            "-",
                            :VALUE,
                            "-",
-                           :VALUE])
+                           :VALUE,
+                           :UNINDENT,
+                           :UNINDENT])
       end
     end
   end
@@ -264,7 +276,9 @@ RSpec.describe Yaml::Sort::Parser do
                            "-",
                            :VALUE,
                            "-",
-                           :VALUE])
+                           :VALUE,
+                           :UNINDENT,
+                           :UNINDENT])
       end
     end
   end
