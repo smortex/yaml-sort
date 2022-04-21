@@ -171,7 +171,8 @@ def next_token
   @current_token = @tokens.shift
 end
 
-def parse(text)
+def parse(text, filename: nil)
+  @filename = filename
   scan(text)
   do_parse
 end

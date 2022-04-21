@@ -52,7 +52,7 @@ module Yaml
 
       def process_document(filename, options)
         yaml = read_document(filename)
-        sorted_yaml = sort_yaml(yaml)
+        sorted_yaml = sort_yaml(yaml, filename)
         write_output(yaml, sorted_yaml, filename, options)
       end
 
@@ -64,8 +64,8 @@ module Yaml
         end
       end
 
-      def sort_yaml(yaml)
-        document = @parser.parse(yaml)
+      def sort_yaml(yaml, filename)
+        document = @parser.parse(yaml, filename: filename)
         document = document.sort
         "---\n#{document}\n"
       end
