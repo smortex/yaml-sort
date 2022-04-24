@@ -5,7 +5,7 @@
 class Yaml::Sort::Parser
 token
   START_OF_DOCUMENT END_OF_DOCUMENT
-  VALUE KEY UNINDENT
+  VALUE KEY UNINDENT ITEM
 rule
   document: START_OF_DOCUMENT value END_OF_DOCUMENT { result = val[1] }
           | START_OF_DOCUMENT value                 { result = val[1] }
@@ -23,7 +23,7 @@ rule
   list: list list_item { val[0].add_item(*val[1]); result = val[0] }
       | list_item      { result = List.create(*val[0]) }
 
-  list_item: '-' value { result = [Scalar.new(val[0]), val[1]] }
+  list_item: ITEM value { result = [Scalar.new(val[0]), val[1]] }
 end
 
 ---- header
@@ -91,7 +91,7 @@ def scan(text)
         @lineno += 1
         @position = 0
       when s.scan(/\n[[:blank:]]*#.*/)      then emit(:COMMENT, s.matched)
-      when s.scan(/\n([[:blank:]]*-) */)    then emit("-", s.matched, indent: s.captures[0])
+      when s.scan(/\n([[:blank:]]*-) */)    then emit(:ITEM, s.matched, indent: s.captures[0])
       when s.scan(/\n[[:blank:]]*\.\.\./)   then emit(:END_OF_DOCUMENT, s.matched)
       when s.scan(/\n?([[:blank:]]*)([^[[:space:]]\n]+):(?=[ \n])/)
         indent = s.captures[0]

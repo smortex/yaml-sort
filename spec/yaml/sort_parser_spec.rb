@@ -175,14 +175,14 @@ RSpec.describe Yaml::Sort::Parser do
     context "#scan" do
       subject { Yaml::Sort::Parser.new.scan(document).map(&:first) }
       it do
-        is_expected.to eq([:START_OF_DOCUMENT,
-                           "-",
-                           :VALUE,
-                           "-",
-                           :VALUE,
-                           "-",
-                           :VALUE,
-                           :UNINDENT])
+        is_expected.to eq(%i[START_OF_DOCUMENT
+                             ITEM
+                             VALUE
+                             ITEM
+                             VALUE
+                             ITEM
+                             VALUE
+                             UNINDENT])
       end
     end
   end
@@ -202,18 +202,18 @@ RSpec.describe Yaml::Sort::Parser do
     context "#scan" do
       subject { Yaml::Sort::Parser.new.scan(document).map(&:first) }
       it do
-        is_expected.to eq([:START_OF_DOCUMENT,
-                           "-",
-                           :KEY,
-                           :VALUE,
-                           :KEY,
-                           :VALUE,
-                           :UNINDENT,
-                           "-",
-                           :KEY,
-                           :VALUE,
-                           :UNINDENT,
-                           :UNINDENT])
+        is_expected.to eq(%i[START_OF_DOCUMENT
+                             ITEM
+                             KEY
+                             VALUE
+                             KEY
+                             VALUE
+                             UNINDENT
+                             ITEM
+                             KEY
+                             VALUE
+                             UNINDENT
+                             UNINDENT])
       end
     end
   end
@@ -234,16 +234,16 @@ RSpec.describe Yaml::Sort::Parser do
     context "#scan" do
       subject { Yaml::Sort::Parser.new.scan(document).map(&:first) }
       it do
-        is_expected.to eq([:START_OF_DOCUMENT,
-                           :KEY,
-                           "-",
-                           :VALUE,
-                           "-",
-                           :VALUE,
-                           "-",
-                           :VALUE,
-                           :UNINDENT,
-                           :UNINDENT])
+        is_expected.to eq(%i[START_OF_DOCUMENT
+                             KEY
+                             ITEM
+                             VALUE
+                             ITEM
+                             VALUE
+                             ITEM
+                             VALUE
+                             UNINDENT
+                             UNINDENT])
       end
     end
   end
@@ -269,16 +269,16 @@ RSpec.describe Yaml::Sort::Parser do
     context "#scan" do
       subject { Yaml::Sort::Parser.new.scan(document).map(&:first) }
       it do
-        is_expected.to eq([:START_OF_DOCUMENT,
-                           :KEY,
-                           "-",
-                           :VALUE,
-                           "-",
-                           :VALUE,
-                           "-",
-                           :VALUE,
-                           :UNINDENT,
-                           :UNINDENT])
+        is_expected.to eq(%i[START_OF_DOCUMENT
+                             KEY
+                             ITEM
+                             VALUE
+                             ITEM
+                             VALUE
+                             ITEM
+                             VALUE
+                             UNINDENT
+                             UNINDENT])
       end
     end
   end
