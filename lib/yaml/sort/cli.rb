@@ -54,6 +54,9 @@ module Yaml
         yaml = read_document(filename)
         sorted_yaml = sort_yaml(yaml, filename)
         write_output(yaml, sorted_yaml, filename, options)
+      rescue Racc::ParseError => e
+        warn(e.message)
+        @exit_code = 1
       end
 
       def read_document(filename)
