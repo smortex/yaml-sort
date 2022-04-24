@@ -9,7 +9,6 @@ token
 rule
   document: START_OF_DOCUMENT value END_OF_DOCUMENT { result = val[1] }
           | START_OF_DOCUMENT value                 { result = val[1] }
-          | value
 
   value: VALUE               { result = Scalar.new(val[0]) }
        | dictionary UNINDENT { result = val[0] }
@@ -33,6 +32,8 @@ require 'strscan'
 ---- inner
 
 def scan(text)
+  text = "---\n#{text}" unless text.start_with?("---\n")
+
   scan_value = false
 
   @lines = text.lines
