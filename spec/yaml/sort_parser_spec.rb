@@ -21,14 +21,14 @@ RSpec.describe Yaml::Sort::Parser do
     subject { Yaml::Sort::Parser.new.scan(document) }
 
     it do
-      is_expected.to eq([[:START_OF_DOCUMENT, { filename: nil, length: 3, lineno: 1, position: 0, value: "---", indent: nil }],
-                         [:KEY, { filename: nil, length: 4, lineno: 2, position: 0, value: "foo:", indent: "" }],
-                         [:VALUE, { filename: nil, length: 3, lineno: 2, position: 5, value: "bar", indent: nil }],
-                         [:KEY, { filename: nil, length: 4, lineno: 3, position: 0, value: "bar:", indent: "" }],
-                         [:VALUE, { filename: nil, length: 9, lineno: 3, position: 5, value: "|-\n  Plop", indent: nil }],
-                         [:KEY, { filename: nil, length: 4, lineno: 5, position: 0, value: "baz:", indent: "" }],
-                         [:VALUE, { filename: nil, length: 2, lineno: 5, position: 5, value: "42", indent: nil }],
-                         [:UNINDENT, { filename: nil, length: 0, lineno: 5, position: 0, value: "", indent: nil }]])
+      is_expected.to eq([[:START_OF_DOCUMENT, { length: 3, lineno: 1, position: 0, value: "---", indent: nil }],
+                         [:KEY, { length: 4, lineno: 2, position: 0, value: "foo:", indent: "" }],
+                         [:VALUE, { length: 3, lineno: 2, position: 5, value: "bar", indent: nil }],
+                         [:KEY, { length: 4, lineno: 3, position: 0, value: "bar:", indent: "" }],
+                         [:VALUE, { length: 9, lineno: 3, position: 5, value: "|-\n  Plop", indent: nil }],
+                         [:KEY, { length: 4, lineno: 5, position: 0, value: "baz:", indent: "" }],
+                         [:VALUE, { length: 2, lineno: 5, position: 5, value: "42", indent: nil }],
+                         [:UNINDENT, { length: 0, lineno: 5, position: 0, value: "", indent: nil }]])
     end
   end
 

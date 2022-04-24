@@ -145,7 +145,6 @@ def emit(token, value, length: nil, indent: nil)
     value: value,
     lineno: @lineno,
     position: @position,
-    filename: @filename,
     length: length,
     indent: indent,
   }
@@ -163,7 +162,7 @@ end
 def unindent(new_indent = nil)
   while @indent_stack.count > 0 && (new_indent.nil? || @indent_stack.last.length > new_indent.length)
     value = @indent_stack.pop
-    @tokens << [:UNINDENT, { value: value, lineno: @lineno, position: 0, filename: @filename, length: value.length, indent: nil }]
+    @tokens << [:UNINDENT, { value: value, lineno: @lineno, position: 0, length: value.length, indent: nil }]
   end
 end
 
@@ -172,15 +171,21 @@ def next_token
 end
 
 def parse(text, filename: nil)
-  @filename = filename
+  @filename = filename || "<stdin>"
   scan(text)
   do_parse
 end
 
 def on_error(error_token_id, error_value, value_stack)
-  puts "unexpected #{@current_token[0]} on #{@current_token[1][:filename] || "<stdin>"}:#{@current_token[1][:lineno]}"
-  puts @lines[@current_token[1][:lineno]]
-  puts " " * @current_token[1][:position] + "^" + "~" * (@current_token[1][:length] - 1)
+  message = if @current_token
+              <<~MESSAGE
+                #{@filename}:#{@current_token[1][:lineno]} unexpected #{@current_token[0]}
+                #{@lines[@current_token[1][:lineno] - 1].chomp}
+                #{" " * @current_token[1][:position]}^#{"~" * ([@current_token[1][:length] - 1, 0].max)}
+                MESSAGE
+            else
+              "#{@filename}:#{@lineno} unexpected end-of-file"
+            end
 
-  raise "Error"
+  raise(Racc::ParseError, message)
 end
