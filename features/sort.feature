@@ -33,6 +33,30 @@ Feature: Sorting YAML files
       - bar
       - baz
       """
+  Scenario: Sorting nested lists and dictionaries
+    Given a file named "sample.yaml" with:
+      """
+      ---
+      items:
+      - foo: 1
+        bar: 2
+        baz: 3
+      - toto: 4
+        tata: 5
+        titi: 6
+      """
+    When I successfully run `exe/yaml-sort sample.yaml`
+    Then the stdout should contain:
+      """
+      ---
+      items:
+      - bar: 2
+        baz: 3
+        foo: 1
+      - tata: 5
+        titi: 6
+        toto: 4
+      """
   Scenario: Sorting Puppet hiera data
     The `lookup_options` key is special, we want it to always be at the
     beginning of the file.

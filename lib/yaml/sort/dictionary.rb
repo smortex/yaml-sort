@@ -20,13 +20,15 @@ module Yaml
         dict
       end
 
-      def to_s
+      def to_s(skip_first_indent: false)
+        n = -1
         super + items.map do |k, v|
+          n += 1
           case v
           when List, Dictionary
-            "#{k}\n#{v}"
+            "#{k.to_s(skip_first_indent: skip_first_indent && n.zero?)}\n#{v}"
           when Scalar
-            "#{k} #{v}"
+            "#{k.to_s(skip_first_indent: skip_first_indent && n.zero?)} #{v}"
           end
         end.join("\n")
       end
