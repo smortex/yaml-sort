@@ -22,7 +22,7 @@ rule
   list: list list_item { val[0].add_item(*val[1]); result = val[0] }
       | list_item      { result = List.create(*val[0]) }
 
-  list_item: ITEM value { result = [Scalar.new(val[0]), val[1]] }
+  list_item: ITEM value { result = [Item.new(val[0]), val[1]] }
 end
 
 ---- header
@@ -94,10 +94,10 @@ def scan(text)
       when s.scan(/\n[[:blank:]]*#.*/)      then emit(:COMMENT, s.matched)
       when s.scan(/\n([[:blank:]]*-) */)    then emit(:ITEM, s.matched, indent: s.captures[0])
       when s.scan(/\n[[:blank:]]*\.\.\./)   then emit(:END_OF_DOCUMENT, s.matched)
-      when s.scan(/\n?([[:blank:]]*)([^[[:space:]]\n]+):(?=[ \n])/)
+      when s.scan(/\n?([[:blank:]]*)([^[[:space:]]\n]+:)(?=[ \n])/)
         indent = s.captures[0]
         indent = last_indent_value + indent + " " unless s.matched.start_with?("\n")
-        emit(:KEY, s.matched, indent: indent)
+        emit(:KEY, s.matched, indent: indent, value: s.captures[1])
 
       when s.scan(/\n\z/)
         # Done
@@ -126,16 +126,16 @@ def scan(text)
   @tokens
 end
 
-def emit(token, value, length: nil, indent: nil)
+def emit(token, match, length: nil, indent: nil, value: nil)
   indent.gsub!("-", " ") if indent
   if token && length.nil?
-    raise "length must be explicitly passed when value is not a String (#{value.class.name})" unless value.is_a?(String)
-    length = value.length
+    raise "length must be explicitly passed when match is not a String (#{match.class.name})" unless match.is_a?(String)
+    length = match.length
   end
 
-  if value.start_with?("\n")
+  if match.start_with?("\n")
     @lineno += 1
-    value = value[1..-1]
+    match = match[1..-1]
     length -= 1
     @position = 0
   end
@@ -146,7 +146,7 @@ def emit(token, value, length: nil, indent: nil)
   end
 
   exvalue = {
-    value: value,
+    value: value || match,
     lineno: @lineno,
     position: @position,
     length: length,
@@ -154,7 +154,7 @@ def emit(token, value, length: nil, indent: nil)
   }
   @tokens << [token, exvalue]
 
-  @lineno += value.count("\n")
+  @lineno += match.count("\n")
 
   @position += length
 end

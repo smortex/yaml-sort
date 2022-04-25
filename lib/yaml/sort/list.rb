@@ -22,15 +22,13 @@ module Yaml
 
       def to_s
         super + items.map do |item|
-          "#{item[0]}#{item[1]}"
+          "#{item[0]}#{item[1].to_s(skip_first_indent: true)}"
         end.join("\n")
       end
 
       def sort
-        List.new(items.sort { |a, b| a[1] <=> b[1] })
-      rescue ArgumentError
-        # Non-comparable items
-        self
+        # TODO: Add an option to sort scalar values
+        List.new(items.map { |i| [i[0], i[1].sort] })
       end
     end
   end

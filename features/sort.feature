@@ -16,6 +16,8 @@ Feature: Sorting YAML files
       foo: foo
       """
   Scenario: Sorting lists by value
+    For now, scalars are not sorted.  At some point, we want to add a flag or
+    controll comments to indicate some lists of scalars need to be sorted.
     Given a file named "list.yaml" with:
       """
       ---
@@ -27,9 +29,33 @@ Feature: Sorting YAML files
     Then the stdout should contain:
       """
       ---
+      - foo
       - bar
       - baz
-      - foo
+      """
+  Scenario: Sorting nested lists and dictionaries
+    Given a file named "sample.yaml" with:
+      """
+      ---
+      items:
+      - foo: 1
+        bar: 2
+        baz: 3
+      - toto: 4
+        tata: 5
+        titi: 6
+      """
+    When I successfully run `exe/yaml-sort sample.yaml`
+    Then the stdout should contain:
+      """
+      ---
+      items:
+      - bar: 2
+        baz: 3
+        foo: 1
+      - tata: 5
+        titi: 6
+        toto: 4
       """
   Scenario: Sorting Puppet hiera data
     The `lookup_options` key is special, we want it to always be at the
@@ -58,9 +84,9 @@ Feature: Sorting YAML files
         "profile::acme::secret":
           convert_to: "Sensitive"
       classes:
+      - foo
       - bar
       - baz
-      - foo
       profile::acme::secret: password
       """
   Scenario: Preserving comments
@@ -87,11 +113,11 @@ Feature: Sorting YAML files
       # (Just like a single-line comment)
       bar: bar
       baz:
+        # Single line
+        - foo
         # Multi
         # line
         - bar
-        # Single line
-        - foo
       # A single-line comment is attached to the following item
       foo: foo
       """

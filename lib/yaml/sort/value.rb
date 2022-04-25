@@ -7,7 +7,11 @@ module Yaml
         @comment = []
       end
 
-      def to_s
+      def to_s(*)
+        comments
+      end
+
+      def comments
         @comment.join
       end
 
