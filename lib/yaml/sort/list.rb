@@ -27,9 +27,6 @@ module Yaml
       end
 
       def sort
-        List.new(items.sort { |a, b| a[1] <=> b[1] })
-      rescue ArgumentError
-        # Non-comparable items
         self
       end
     end
