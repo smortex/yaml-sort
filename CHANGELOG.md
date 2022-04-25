@@ -3,9 +3,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.1](https://github.com/smortex/yaml-sort/tree/1.0.1) (2022-04-24)
+## [2.0.0](https://github.com/smortex/yaml-sort/tree/2.0.0) (2022-04-25)
 
-[Full Changelog](https://github.com/smortex/yaml-sort/compare/v1.0.0...1.0.1)
+[Full Changelog](https://github.com/smortex/yaml-sort/compare/v1.0.1...2.0.0)
+
+**Merged pull requests:**
+
+- Rework list sorting [\#7](https://github.com/smortex/yaml-sort/pull/7) ([smortex](https://github.com/smortex))
+
+## [v1.0.1](https://github.com/smortex/yaml-sort/tree/v1.0.1) (2022-04-24)
+
+[Full Changelog](https://github.com/smortex/yaml-sort/compare/v1.0.0...v1.0.1)
 
 **Fixed bugs:**
 
