@@ -104,7 +104,20 @@ def scan(text)
       when s.match?(/./)
         scan_value = true
       else
-        raise "LoST: #{s.rest.inspect} #{s.eos?}"
+        message = if @lines[@lineno - 1][@position] == "\n"
+                  <<~MESSAGE
+                    #{@filename}:#{@lineno + 1}: unexpected content
+                    #{@lines[@lineno].chomp}
+                    ^#{"~" * (@lines[@lineno].chomp.length - 1)}
+                    MESSAGE
+                  else
+                  <<~MESSAGE
+                    #{@filename}:#{@lineno}: unexpected content
+                    #{@lines[@lineno - 1].chomp}
+                    #{" " * @position}^
+                    MESSAGE
+                  end
+        raise(Racc::ParseError, message)
       end
     end
   end
