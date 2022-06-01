@@ -14,7 +14,7 @@ RSpec.describe Yaml::Sort::Parser do
         foo: bar
         bar: |-
           Plop
-        baz: 42
+        baz biz: 42
       YAML
     end
 
@@ -26,8 +26,8 @@ RSpec.describe Yaml::Sort::Parser do
                          [:VALUE, { length: 3, lineno: 2, position: 5, value: "bar", indent: nil }],
                          [:KEY, { length: 4, lineno: 3, position: 0, value: "bar:", indent: "" }],
                          [:VALUE, { length: 9, lineno: 3, position: 5, value: "|-\n  Plop", indent: nil }],
-                         [:KEY, { length: 4, lineno: 5, position: 0, value: "baz:", indent: "" }],
-                         [:VALUE, { length: 2, lineno: 5, position: 5, value: "42", indent: nil }],
+                         [:KEY, { length: 8, lineno: 5, position: 0, value: "baz biz:", indent: "" }],
+                         [:VALUE, { length: 2, lineno: 5, position: 9, value: "42", indent: nil }],
                          [:UNINDENT, { length: 0, lineno: 5, position: 0, value: "", indent: nil }]])
     end
   end
