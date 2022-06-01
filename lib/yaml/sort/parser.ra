@@ -94,7 +94,7 @@ def scan(text)
       when s.scan(/\n[[:blank:]]*#.*/)      then emit(:COMMENT, s.matched)
       when s.scan(/\n([[:blank:]]*-) */)    then emit(:ITEM, s.matched, indent: s.captures[0])
       when s.scan(/\n[[:blank:]]*\.\.\./)   then emit(:END_OF_DOCUMENT, s.matched)
-      when s.scan(/\n?([[:blank:]]*)([^[[:space:]]\n]+:)(?=[ \n])/)
+      when s.scan(/\n?([[:blank:]]*)(.+:)(?=[ \n])/)
         indent = s.captures[0]
         indent = last_indent_value + indent + " " unless s.matched.start_with?("\n")
         emit(:KEY, s.matched, indent: indent, value: s.captures[1])
