@@ -3,6 +3,7 @@
 require "optparse"
 
 require "cri"
+require "tempfile"
 
 module Yaml
   module Sort
@@ -25,7 +26,7 @@ module Yaml
           opts.on("-l", "--lint", "Ensure files content is sorted as expected") do
             options[:lint] = true
           end
-        end.parse!
+        end.parse!(argv)
 
         if !options[:in_place] && !options[:lint] && argv.count > 1
           warn "Sorting multiple YAML document to stdout does not make sense"
@@ -47,7 +48,7 @@ module Yaml
           end
         end
 
-        @exit_code
+        $kernel.exit(@exit_code) # rubocop:disable Style/GlobalVars
       end
 
       def process_document(filename, options)
@@ -78,12 +79,27 @@ module Yaml
           File.write(filename, sorted_yaml)
         elsif options[:lint]
           if yaml != sorted_yaml
-            warn "#{filename || "<stdin>"} is not sorted as expected"
+            show_diff(filename, yaml, sorted_yaml)
             @exit_code = 1
           end
         else
           puts sorted_yaml
         end
+      end
+
+      def show_diff(filename, actual, expected)
+        filename ||= "<stdin>"
+
+        a = Tempfile.new
+        a.write(actual)
+        a.close
+
+        b = Tempfile.new
+        b.write(expected)
+        b.close
+
+        warn "diff #{File.join("a", filename)} #{File.join("b", filename)}"
+        warn `diff -u --label "#{File.join("a", filename)}" #{a.path} --label "#{File.join("b", filename)}" #{b.path}`
       end
     end
   end
