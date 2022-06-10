@@ -83,6 +83,7 @@ def scan(text)
           emit(:VALUE, match)
         end
       end
+      s.scan(/[[:blank:]]*/)
       scan_value = false
     else
       case
