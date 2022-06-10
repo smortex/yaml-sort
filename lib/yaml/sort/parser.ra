@@ -46,43 +46,42 @@ def scan(text)
 
   until s.eos?
     if scan_value
-      unless s.match?(/[[:space:]]*\n/)
-        @position += s.matched_size if s.scan(/[[:blank:]]*/)
-        case
-        when s.scan(/[|>][-+]?(?=\n)/)
-          match = s.matched
-          
-          while s.match?("\n" + last_indent_value + " ")
-            match += s.scan(/\n[^\n]+(?=\n)/)
-          end
-          emit(:VALUE, match)
-        when s.scan(/"/)
-          match = s.matched
-          loop do
-            match += s.scan_until(/"|\\/)
-            if match[-1] == "\\"
-              match += s.scan(/.|\n/)
-            else
-              break
-            end
-          end
-          emit(:VALUE, match)
-        when s.scan(/'/)
-          match = s.matched
-          loop do
-            match += s.scan_until(/'/)
-            break unless s.match?(/'/)
-            match += s.scan(/'/)
-          end
-          emit(:VALUE, match)
-        when s.scan(/\S+/)
-          match = s.matched
-          until s.match?(/[\n]/) || s.eos?
-            match += s.scan(/[^\n]+/)
-          end
-          emit(:VALUE, match)
+      @position += s.matched_size if s.scan(/[[:blank:]]*/)
+      case
+      when s.scan(/[|>][-+]?(?=\n)/)
+        match = s.matched
+
+        while s.match?("\n" + last_indent_value + " ")
+          match += s.scan(/\n[^\n]+(?=\n)/)
         end
+        emit(:VALUE, match)
+      when s.scan(/"/)
+        match = s.matched
+        loop do
+          match += s.scan_until(/"|\\/)
+          if match[-1] == "\\"
+            match += s.scan(/.|\n/)
+          else
+            break
+          end
+        end
+        emit(:VALUE, match)
+      when s.scan(/'/)
+        match = s.matched
+        loop do
+          match += s.scan_until(/'/)
+          break unless s.match?(/'/)
+          match += s.scan(/'/)
+        end
+        emit(:VALUE, match)
+      when s.scan(/\S+/)
+        match = s.matched
+        until s.match?(/[\n]/) || s.eos?
+          match += s.scan(/[^\n]+/)
+        end
+        emit(:VALUE, match)
       end
+      s.scan(/[[:blank:]]*/)
       scan_value = false
     else
       case
