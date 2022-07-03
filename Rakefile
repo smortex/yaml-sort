@@ -24,7 +24,7 @@ task cucumber: ["lib/yaml/sort/parser.rb"]
 
 require "github_changelog_generator/task"
 GitHubChangelogGenerator::RakeTask.new :changelog do |config|
-  config.future_release = Yaml::Sort::VERSION
+  config.future_release = "v#{Yaml::Sort::VERSION}"
   config.header = <<~HEADER.chomp
     # Changelog
     All notable changes to this project will be documented in this file.
