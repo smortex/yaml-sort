@@ -3,9 +3,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.2](https://github.com/smortex/yaml-sort/tree/2.0.2) (2022-06-10)
+## [v2.1.0](https://github.com/smortex/yaml-sort/tree/v2.1.0) (2022-07-03)
 
-[Full Changelog](https://github.com/smortex/yaml-sort/compare/v2.0.1...2.0.2)
+[Full Changelog](https://github.com/smortex/yaml-sort/compare/v2.0.2...v2.1.0)
+
+**Implemented enhancements:**
+
+- Make the Rake tasks silent [\#11](https://github.com/smortex/yaml-sort/pull/11) ([smortex](https://github.com/smortex))
+- Improve --lint by showing a diff on error [\#10](https://github.com/smortex/yaml-sort/pull/10) ([smortex](https://github.com/smortex))
+
+## [v2.0.2](https://github.com/smortex/yaml-sort/tree/v2.0.2) (2022-06-10)
+
+[Full Changelog](https://github.com/smortex/yaml-sort/compare/v2.0.1...v2.0.2)
 
 **Fixed bugs:**
 
