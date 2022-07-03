@@ -11,7 +11,8 @@ Feature: Error reporting
 
       """
     When I run `exe/yaml-sort sample.yaml`
-    Then the stderr should contain:
+    Then the exit status should be 1
+    And the stderr should contain:
       """
       sample.yaml:6 unexpected KEY
       foo: bar
@@ -30,7 +31,8 @@ Feature: Error reporting
       - baz
       """
     When I run `exe/yaml-sort sample.yaml`
-    Then the stderr should contain:
+    Then the exit status should be 1
+    And the stderr should contain:
       """
       sample.yaml:7 unexpected ITEM
       - baz
@@ -47,7 +49,8 @@ Feature: Error reporting
 
       """
     When I run `exe/yaml-sort sample.yaml`
-    Then the stderr should contain:
+    Then the exit status should be 1
+    And the stderr should contain exactly:
       """
       sample.yaml:4 unexpected UNINDENT
       foo:
@@ -64,7 +67,8 @@ Feature: Error reporting
 
       """
     When I run `exe/yaml-sort sample.yaml`
-    Then the stderr should contain:
+    Then the exit status should be 1
+    And the stderr should contain exactly:
       """
       sample.yaml:4 unexpected end-of-file
       """
