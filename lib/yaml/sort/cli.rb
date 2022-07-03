@@ -12,7 +12,7 @@ module Yaml
         @parser = Yaml::Sort::Parser.new
       end
 
-      def execute(argv) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      def execute(argv, kernel = Kernel) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
         options = {
           in_place: false,
           lint: false,
@@ -48,7 +48,7 @@ module Yaml
           end
         end
 
-        $kernel.exit(@exit_code) # rubocop:disable Style/GlobalVars
+        kernel.exit(@exit_code)
       end
 
       def process_document(filename, options)

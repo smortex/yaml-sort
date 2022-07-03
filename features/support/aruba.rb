@@ -11,11 +11,11 @@ class Runner
     $stdin  = stdin
     $stdout = stdout
     $stderr = stderr
-    $kernel = kernel # rubocop:disable Style/GlobalVars
+    @kernel = kernel
   end
 
   def execute!
-    Yaml::Sort::Cli.new.execute(@argv)
+    Yaml::Sort::Cli.new.execute(@argv, @kernel)
   end
 end
 
