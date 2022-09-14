@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "simplecov"
+
 require "yaml/sort"
 
 RSpec.configure do |config|
