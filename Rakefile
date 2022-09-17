@@ -13,7 +13,7 @@ require "cucumber/rake/task"
 
 Cucumber::Rake::Task.new
 
-task default: %i[rubocop spec cucumber]
+task default: %i[spec cucumber]
 
 file "lib/yaml/sort/parser.rb": ["lib/yaml/sort/parser.ra"] do
   sh "racc --output-status --output-file=lib/yaml/sort/parser.rb lib/yaml/sort/parser.ra"
