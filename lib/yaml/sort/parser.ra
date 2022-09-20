@@ -5,7 +5,7 @@
 class Yaml::Sort::Parser
 token
   START_OF_DOCUMENT END_OF_DOCUMENT
-  VALUE KEY UNINDENT ITEM
+  VALUE KEY UNINDENT ITEM ANCHOR ALIAS
 rule
   document: START_OF_DOCUMENT value END_OF_DOCUMENT { result = val[1] }
           | START_OF_DOCUMENT value                 { result = val[1] }
@@ -13,16 +13,19 @@ rule
   value: VALUE               { result = Scalar.new(val[0]) }
        | dictionary UNINDENT { result = val[0] }
        | list UNINDENT       { result = val[0] }
+       | ALIAS               { result = Alias.new(@anchors, val[0]) }
 
   dictionary: dictionary dictionary_item { val[0].add_item(*val[1]); result = val[0] }
             | dictionary_item            { result = Dictionary.create(*val[0]) }
 
-  dictionary_item: KEY value { result = [Scalar.new(val[0]), val[1]] }
+  dictionary_item: KEY ANCHOR value { @anchors[val[1][:value]] = val[2]; result = [Scalar.new(val[0]), Alias.new(@anchors, val[1])] }
+                 | KEY value        { result = [Scalar.new(val[0]), val[1]] }
 
   list: list list_item { val[0].add_item(*val[1]); result = val[0] }
       | list_item      { result = List.create(*val[0]) }
 
-  list_item: ITEM value { result = [Item.new(val[0]), val[1]] }
+  list_item: ITEM ANCHOR value { @anchors[val[1][:value]] = val[2]; result = [Item.new(val[0]),  Alias.new(@anchors, val[1])] }
+           | ITEM value        { result = [Item.new(val[0]), val[1]] }
 end
 
 ---- header
@@ -43,11 +46,16 @@ def scan(text)
   @fakelineno = 0
   @position = 0
   @indent_stack = []
+  @anchors = {}
 
   until s.eos?
     if scan_value
       @position += s.matched_size if s.scan(/[[:blank:]]*/)
       case
+      when s.scan(/&[[:alnum:]]+/)
+        emit(:ANCHOR, s.matched[1..-1])
+      when s.scan(/\*[[:alnum:]]+/)
+        emit(:ALIAS, s.matched[1..-1])
       when s.scan(/[|>][-+]?(?=\n)/)
         match = s.matched
 

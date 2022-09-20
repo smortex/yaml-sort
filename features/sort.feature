@@ -121,3 +121,49 @@ Feature: Sorting YAML files
       # A single-line comment is attached to the following item
       foo: foo
       """
+  Scenario: Sorting aliases
+    Given a file named "common.yaml" with:
+      """
+      ---
+      def: &alias1
+        a: 1
+        b: &ref 2
+      abc: *alias1
+      jkl: &alias2 "3"
+      ghi: *alias2
+      mno:
+        pqr:
+          vwx:
+            - &ref3 34
+            - *ref
+            - &ref2 23
+            - *ref
+            - *ref3
+          stu: *alias2
+          b: *ref2
+          a: *ref
+          c: *ref2
+      """
+    When I successfully run `exe/yaml-sort common.yaml`
+    Then the stdout should contain:
+      """
+      ---
+      abc: &alias1
+        a: 1
+        b: &ref 2
+      def: *alias1
+      ghi: &alias2 "3"
+      jkl: *alias2
+      mno:
+        pqr:
+          a: *ref
+          b: &ref2 23
+          c: *ref2
+          stu: *alias2
+          vwx:
+            - &ref3 34
+            - *ref
+            - *ref2
+            - *ref
+            - *ref3
+      """
