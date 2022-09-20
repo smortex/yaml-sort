@@ -165,8 +165,19 @@ def emit(token, match, length: nil, indent: nil, value: nil)
     @indent_stack.push(indent) unless @indent_stack.last == indent
   end
 
+  value ||= match
+
+  if token == :KEY && value == '<<:'
+    message = <<~MESSAGE
+      #{@filename}:#{@lineno}: '<<:' references are not sortable:
+      #{@lines[@lineno - 1].chomp}
+      #{indent}#{" " * @position}^#{"~" * (length - indent.length - 1)}
+    MESSAGE
+    raise(Racc::ParseError, message)
+  end
+
   exvalue = {
-    value: value || match,
+    value: value,
     lineno: @lineno,
     position: @position,
     length: length,
