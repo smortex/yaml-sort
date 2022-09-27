@@ -3,6 +3,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.2.0](https://github.com/smortex/yaml-sort/tree/v2.2.0) (2022-09-27)
+
+[Full Changelog](https://github.com/smortex/yaml-sort/compare/v2.1.1...v2.2.0)
+
+**Implemented enhancements:**
+
+- Add support for &anchor / \*alias [\#17](https://github.com/smortex/yaml-sort/pull/17) ([smortex](https://github.com/smortex))
+
+**Fixed bugs:**
+
+- Fix relocation of comments following UNINDENT [\#18](https://github.com/smortex/yaml-sort/pull/18) ([smortex](https://github.com/smortex))
+
+**Merged pull requests:**
+
+- Add CodeClimate integration [\#15](https://github.com/smortex/yaml-sort/pull/15) ([smortex](https://github.com/smortex))
+
 ## [v2.1.1](https://github.com/smortex/yaml-sort/tree/v2.1.1) (2022-07-03)
 
 [Full Changelog](https://github.com/smortex/yaml-sort/compare/v2.1.0...v2.1.1)
