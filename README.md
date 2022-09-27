@@ -1,5 +1,9 @@
 # yaml-sort
 
+[![CI](https://github.com/smortex/yaml-sort/actions/workflows/ci.yaml/badge.svg)](https://github.com/smortex/yaml-sort/actions/workflows/ci.yaml)
+[![Maintainability](https://api.codeclimate.com/v1/badges/4df28a3babe44d1a83c0/maintainability)](https://codeclimate.com/github/smortex/yaml-sort/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/4df28a3babe44d1a83c0/test_coverage)](https://codeclimate.com/github/smortex/yaml-sort/test_coverage)
+
 An utility to manage YAML files and ensure their lines is in a predictable order.
 
 This is mainly indended to manage [Hiera files](https://puppet.com/docs/puppet/7/hiera_intro.html) for [Puppet](https://puppet.com/) and translation files in [Ruby on Rails](https://rubyonrails.org/) applications.
