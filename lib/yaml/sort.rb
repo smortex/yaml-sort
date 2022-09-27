@@ -2,6 +2,7 @@
 
 require_relative "sort/parser"
 require_relative "sort/value"
+require_relative "sort/alias"
 require_relative "sort/dictionary"
 require_relative "sort/item"
 require_relative "sort/list"

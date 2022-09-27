@@ -72,3 +72,21 @@ Feature: Error reporting
       """
       sample.yaml:4 unexpected end-of-file
       """
+  Scenario: Usupported <<: references
+    Given a file named "sample.yaml" with:
+      """
+      ---
+      foo: &ref
+        a: 1
+        b: 2
+      bar:
+        <<: *ref
+      """
+    When I run `exe/yaml-sort sample.yaml`
+    Then the exit status should be 1
+    And the stderr should contain exactly:
+      """
+      sample.yaml:6: '<<:' references are not sortable:
+        <<: *ref
+        ^~~
+      """
