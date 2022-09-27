@@ -135,7 +135,7 @@ def scan(text)
   @tokens.each do |token|
     if token[0] == :COMMENT
       comment << token[1][:value] + "\n"
-    elsif comment.any?
+    elsif comment.any? && token[0] != :UNINDENT
       token[1][:comment] = comment
       comment = []
     end
