@@ -104,14 +104,24 @@ Feature: Sorting YAML files
         # Multi
         # line
         - bar
+      bat:
+        foo: foo
+        bar: bar
+      # Another comment after indentation
+      bak: bak
       """
     When I successfully run `exe/yaml-sort common.yaml`
     Then the stdout should contain:
       """
       ---
+      # Another comment after indentation
+      bak: bak
       # A multi-line comment is attached to the following item
       # (Just like a single-line comment)
       bar: bar
+      bat:
+        bar: bar
+        foo: foo
       baz:
         # Single line
         - foo
