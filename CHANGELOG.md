@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.2.2](https://github.com/smortex/yaml-sort/tree/v2.2.2) (2023-01-06)
+
+[Full Changelog](https://github.com/smortex/yaml-sort/compare/v2.2.1...v2.2.2)
+
+**Fixed bugs:**
+
+- Fix parsing of "simple" multi-line VALUE [\#24](https://github.com/smortex/yaml-sort/pull/24) ([smortex](https://github.com/smortex))
+
 ## [v2.2.1](https://github.com/smortex/yaml-sort/tree/v2.2.1) (2023-01-04)
 
 [Full Changelog](https://github.com/smortex/yaml-sort/compare/v2.2.0...v2.2.1)
