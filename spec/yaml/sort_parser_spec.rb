@@ -17,6 +17,9 @@ RSpec.describe Yaml::Sort::Parser do
         baz biz: 42
         qux: 'quux: quuux'
         ta'ata: mā'ohi
+        multi-line: starts here
+          continues
+          and end there
       YAML
     end
 
@@ -34,7 +37,9 @@ RSpec.describe Yaml::Sort::Parser do
                          [:VALUE, { length: 13, lineno: 6, position: 5, value: "'quux: quuux'", indent: nil }],
                          [:KEY, { length: 7, lineno: 7, position: 0, value: "ta'ata:", indent: "" }],
                          [:VALUE, { length: 6, lineno: 7, position: 8, value: "mā'ohi", indent: nil }],
-                         [:UNINDENT, { length: 0, lineno: 7, position: 0, value: "", indent: nil }]])
+                         [:KEY, { length: 11, lineno: 8, position: 0, value: "multi-line:", indent: "" }],
+                         [:VALUE, { length: 39, lineno: 8, position: 12, value: "starts here\n  continues\n  and end there", indent: nil }],
+                         [:UNINDENT, { length: 0, lineno: 10, position: 0, value: "", indent: nil }]])
     end
   end
 
