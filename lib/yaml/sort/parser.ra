@@ -82,10 +82,11 @@ def scan(text)
           match += s.scan(/'/)
         end
         emit(:VALUE, match)
-      when s.scan(/\S+/)
-        match = s.matched
-        until s.match?(/[\n]/) || s.eos?
-          match += s.scan(/[^\n]+/)
+      when s.match?(/\S+/)
+        match = s.scan_until(/$/)
+
+        while s.match?("\n" + last_indent_value + " ")
+          match += s.scan(/\n[^\n]+(?=\n)/)
         end
         emit(:VALUE, match)
       end
