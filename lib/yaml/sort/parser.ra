@@ -56,13 +56,6 @@ def scan(text)
         emit(:ANCHOR, s.matched[1..-1])
       when s.scan(/\*[[:alnum:]]+/)
         emit(:ALIAS, s.matched[1..-1])
-      when s.scan(/[|>][-+]?(?=\n)/)
-        match = s.matched
-
-        while s.match?("\n" + last_indent_value + " ") || s.match?(/\n[[:blank:]]*(?=\n)/)
-          match += s.scan(/\n[^\n]*(?=\n)/)
-        end
-        emit(:VALUE, match)
       when s.scan(/"/)
         match = s.matched
         loop do
