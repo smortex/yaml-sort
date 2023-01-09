@@ -14,12 +14,15 @@ RSpec.describe Yaml::Sort::Parser do
         foo: bar
         bar: |-
           Plop
+
+          Plop
         baz biz: 42
         qux: 'quux: quuux'
         ta'ata: mā'ohi
         multi-line: starts here
           continues
-          and end there
+
+          and ends there
       YAML
     end
 
@@ -30,16 +33,22 @@ RSpec.describe Yaml::Sort::Parser do
                          [:KEY, { length: 4, lineno: 2, position: 0, value: "foo:", indent: "" }],
                          [:VALUE, { length: 3, lineno: 2, position: 5, value: "bar", indent: nil }],
                          [:KEY, { length: 4, lineno: 3, position: 0, value: "bar:", indent: "" }],
-                         [:VALUE, { length: 9, lineno: 3, position: 5, value: "|-\n  Plop", indent: nil }],
-                         [:KEY, { length: 8, lineno: 5, position: 0, value: "baz biz:", indent: "" }],
-                         [:VALUE, { length: 2, lineno: 5, position: 9, value: "42", indent: nil }],
-                         [:KEY, { length: 4, lineno: 6, position: 0, value: "qux:", indent: "" }],
-                         [:VALUE, { length: 13, lineno: 6, position: 5, value: "'quux: quuux'", indent: nil }],
-                         [:KEY, { length: 7, lineno: 7, position: 0, value: "ta'ata:", indent: "" }],
-                         [:VALUE, { length: 6, lineno: 7, position: 8, value: "mā'ohi", indent: nil }],
-                         [:KEY, { length: 11, lineno: 8, position: 0, value: "multi-line:", indent: "" }],
-                         [:VALUE, { length: 39, lineno: 8, position: 12, value: "starts here\n  continues\n  and end there", indent: nil }],
-                         [:UNINDENT, { length: 0, lineno: 10, position: 0, value: "", indent: nil }]])
+                         [:VALUE, { length: 17, lineno: 3, position: 5, value: "|-\n  Plop\n\n  Plop", indent: nil }],
+                         [:KEY, { length: 8, lineno: 7, position: 0, value: "baz biz:", indent: "" }],
+                         [:VALUE, { length: 2, lineno: 7, position: 9, value: "42", indent: nil }],
+                         [:KEY, { length: 4, lineno: 8, position: 0, value: "qux:", indent: "" }],
+                         [:VALUE, { length: 13, lineno: 8, position: 5, value: "'quux: quuux'", indent: nil }],
+                         [:KEY, { length: 7, lineno: 9, position: 0, value: "ta'ata:", indent: "" }],
+                         [:VALUE, { length: 6, lineno: 9, position: 8, value: "mā'ohi", indent: nil }],
+                         [:KEY, { length: 11, lineno: 10, position: 0, value: "multi-line:", indent: "" }],
+                         [:VALUE, {
+                           length: 41,
+                           lineno: 10,
+                           position: 12,
+                           value: "starts here\n  continues\n\n  and ends there",
+                           indent: nil,
+                         }],
+                         [:UNINDENT, { length: 0, lineno: 13, position: 0, value: "", indent: nil }]])
     end
   end
 
