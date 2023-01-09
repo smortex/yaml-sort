@@ -59,8 +59,8 @@ def scan(text)
       when s.scan(/[|>][-+]?(?=\n)/)
         match = s.matched
 
-        while s.match?("\n" + last_indent_value + " ")
-          match += s.scan(/\n[^\n]+(?=\n)/)
+        while s.match?("\n" + last_indent_value + " ") || s.match?(/\n[[:blank:]]*(?=\n)/)
+          match += s.scan(/\n[^\n]*(?=\n)/)
         end
         emit(:VALUE, match)
       when s.scan(/"/)
@@ -85,8 +85,8 @@ def scan(text)
       when s.match?(/\S+/)
         match = s.scan_until(/$/)
 
-        while s.match?("\n" + last_indent_value + " ")
-          match += s.scan(/\n[^\n]+(?=\n)/)
+        while s.match?("\n" + last_indent_value + " ") || s.match?(/\n[[:blank:]]*(?=\n)/)
+          match += s.scan(/\n[^\n]*(?=\n)/)
         end
         emit(:VALUE, match)
       end
