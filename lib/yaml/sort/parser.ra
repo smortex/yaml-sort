@@ -6,6 +6,9 @@ class Yaml::Sort::Parser
 token
   START_OF_DOCUMENT END_OF_DOCUMENT
   VALUE KEY UNINDENT ITEM ANCHOR ALIAS
+prechigh
+  left ITEM
+preclow
 rule
   document: START_OF_DOCUMENT value END_OF_DOCUMENT { result = val[1] }
           | START_OF_DOCUMENT value                 { result = val[1] }
@@ -26,6 +29,7 @@ rule
 
   list_item: ITEM ANCHOR value { @anchors[val[1][:value]] = val[2]; result = [Item.new(val[0]),  Alias.new(@anchors, val[1])] }
            | ITEM value        { result = [Item.new(val[0]), val[1]] }
+           | ITEM              { result = [Item.new(val[0]), Scalar.new({value: ''})] }
 end
 
 ---- header
