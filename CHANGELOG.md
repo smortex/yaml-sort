@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.2.4](https://github.com/smortex/yaml-sort/tree/v2.2.4) (2023-01-11)
+
+[Full Changelog](https://github.com/smortex/yaml-sort/compare/v2.2.3...v2.2.4)
+
+**Fixed bugs:**
+
+- Fix parsing of lists with empty values [\#30](https://github.com/smortex/yaml-sort/pull/30) ([smortex](https://github.com/smortex))
+
 ## [v2.2.3](https://github.com/smortex/yaml-sort/tree/v2.2.3) (2023-01-09)
 
 [Full Changelog](https://github.com/smortex/yaml-sort/compare/v2.2.2...v2.2.3)
