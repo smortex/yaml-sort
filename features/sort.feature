@@ -131,6 +131,38 @@ Feature: Sorting YAML files
       # A single-line comment is attached to the following item
       foo: foo
       """
+  Scenario: Dealing with empty items
+    Given a file named "common.yaml" with:
+      """
+      test:
+        day_names:
+        - domenica
+        - lunedì
+        abbr_month_names:
+        -
+        - gen
+        -
+        -
+        -
+        - feb
+        -
+      """
+    When I successfully run `exe/yaml-sort common.yaml`
+    Then the stdout should contain:
+      """
+      test:
+        abbr_month_names:
+        -
+        - gen
+        -
+        -
+        -
+        - feb
+        -
+        day_names:
+        - domenica
+        - lunedì
+      """
   Scenario: Sorting aliases
     Given a file named "common.yaml" with:
       """
