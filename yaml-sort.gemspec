@@ -30,8 +30,4 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "cri"
-
-  spec.add_development_dependency "aruba"
-  spec.add_development_dependency "github_changelog_generator"
-  spec.add_development_dependency "racc"
 end
