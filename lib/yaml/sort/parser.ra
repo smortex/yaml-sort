@@ -223,3 +223,7 @@ def on_error(error_token_id, error_value, value_stack)
 
   raise(Racc::ParseError, message)
 end
+
+def sort_anchors!
+  @anchors.transform_values!(&:sort)
+end

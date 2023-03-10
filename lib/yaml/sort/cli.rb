@@ -70,6 +70,7 @@ module Yaml
 
       def sort_yaml(yaml, filename)
         document = @parser.parse(yaml, filename: filename)
+        @parser.sort_anchors!
         document = document.sort
         "---\n#{document}\n"
       end
