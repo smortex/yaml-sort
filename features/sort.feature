@@ -168,8 +168,8 @@ Feature: Sorting YAML files
       """
       ---
       def: &alias1
-        a: 1
         b: &ref 2
+        a: 1
       abc: *alias1
       jkl: &alias2 "3"
       ghi: *alias2
